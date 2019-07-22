@@ -1,8 +1,10 @@
 require("dotenv").config();
+var fs = require("fs");
+var moment = require("moment");
 const Spotify = require("node-spotify-api");
 const axios = require("axios");
+const keys = require("./keys.js");
 
-var keys = require("./keys.js");
 const spotify = new Spotify(keys.spotify);
 
 // this const below was with a lot of help from Min
@@ -26,7 +28,40 @@ switch (swtichcase) {
     break;
 }
 
-function showConcertInfo(concertInfo) {}
+function showConcertInfo(concertInfo) {
+  let query = `https://rest.bandsintown.com/artists/${concertInfo}/events?app_id=codingbootcamp`;
+  console.log(query);
+
+  axios
+    .get(query)
+    .then(function(response) {
+      let venueName = response.data[0].venue.name;
+      let venueLocation = response.data[0].venue.city;
+      let datetime = response.data[0].datetime;
+      let showDate = moment(datetime).format("L");
+
+      let concertMessage = `${venueName}\n${venueLocation}\n${showDate}\n`;
+      console.log(concertMessage);
+      
+    })
+    .catch(function(error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an object that comes back with details pertaining to the error that occurred.
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message);
+      }
+      console.log(error.config);
+    });
+}
 
 function showSong(songInfo) {
   spotify.search({ type: "track", query: songInfo, limit: 3 }, function(
@@ -46,8 +81,24 @@ function showSong(songInfo) {
 
     // let things = JSON.stringify(data);
     console.log(songMessage);
+    logResults(songMessage);
   });
 }
 function showMovieInfo(movieInfo) {}
 
 function showWhatInfo() {}
+
+function logResults(logInfo) {
+  fs.writeFile("log.txt", userInput, function(err) {
+    if (err) {
+      return console.log(err);
+    }
+    console.log("Success!");
+  });
+  fs.writeFile("log.txt", logInfo, function(err) {
+    if (err) {
+      return console.log(err);
+    }
+    console.log("Success!");
+  });
+}
