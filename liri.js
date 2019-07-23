@@ -99,7 +99,7 @@ function showMovieInfo(movieInfo) {
     //       * Plot of the movie.
     //       * Actors in the movie.
 
-    let movieMessage = `${movieTitle}\n${year}${imdbRate}`;
+    let movieMessage = `${Title}\n${Year}\n${Country},${Language}\n${Plot}\n${Actors}\nRptten Tomatoes: ${rottenTomatoRating}`;
     console.log(movieMessage);
     //   console.log("The movie's rating is: " + response.data.imdbRating);
   });
