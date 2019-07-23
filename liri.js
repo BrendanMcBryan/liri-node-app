@@ -11,6 +11,7 @@ const spotify = new Spotify(keys.spotify);
 let swtichcase = process.argv[2];
 const [node, js, c, ...arr] = process.argv;
 let userInput = arr.join(" ");
+let userInputPlus = arr.join("+");
 
 // Figure out what to do based on argv 2
 switch (swtichcase) {
@@ -21,7 +22,7 @@ switch (swtichcase) {
     showSong(userInput);
     break;
   case "movie-this":
-    showMovieInfo(process.argv[3]);
+    showMovieInfo(userInputPlus);
     break;
   case "do-what-it-says":
     showWhatInfo();
@@ -42,7 +43,6 @@ function showConcertInfo(concertInfo) {
 
       let concertMessage = `${venueName}\n${venueLocation}\n${showDate}\n`;
       console.log(concertMessage);
-      
     })
     .catch(function(error) {
       if (error.response) {
@@ -84,7 +84,26 @@ function showSong(songInfo) {
     logResults(songMessage);
   });
 }
-function showMovieInfo(movieInfo) {}
+
+function showMovieInfo(movieInfo) {
+  const omdbapiKey = `9b255380`;
+  let query = `http://www.omdbapi.com/?t=${movieInfo}&apikey=${omdbapiKey}`;
+
+  axios.get(query).then(function(response) {
+    console.log(query);
+    const { Title, Year, imdbRating, Country, Language, Plot, Actors, imdbID } = response.data;
+    const rottenTomatoRating = response.data.Ratings[1].Value;
+    //       * Rotten Tomacd toes Rating of the movie.
+    //       * Country where the movie was produced.
+    //       * Language of the movie.
+    //       * Plot of the movie.
+    //       * Actors in the movie.
+
+    let movieMessage = `${movieTitle}\n${year}${imdbRate}`;
+    console.log(movieMessage);
+    //   console.log("The movie's rating is: " + response.data.imdbRating);
+  });
+}
 
 function showWhatInfo() {}
 
