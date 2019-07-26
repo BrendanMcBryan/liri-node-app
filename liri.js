@@ -4,7 +4,6 @@ var moment = require("moment");
 const Spotify = require("node-spotify-api");
 const axios = require("axios");
 const keys = require("./keys.js");
-
 const spotify = new Spotify(keys.spotify);
 
 function runswitch(command) {
@@ -17,7 +16,7 @@ function runswitch(command) {
     let blankArr = "No Search Entered";
     logSearh(swtichcase, blankArr);
   } else {
-    logSearh(swtichcase, arr);
+    logSearh(swtichcase, userInput);
   }
   // Figure out what to do based on argv 2
   switch (swtichcase) {
@@ -36,8 +35,7 @@ function runswitch(command) {
         showMovieInfo(userInputPlus);
         break;
       }
-
-    case "do-what-it-says":
+    case "do-what-it-sagitys":
       showWhatInfo();
       break;
   }
@@ -45,17 +43,16 @@ function runswitch(command) {
 
 function showConcertInfo(concertInfo) {
   let query = `https://rest.bandsintown.com/artists/${concertInfo}/events?app_id=codingbootcamp`;
-  // console.log(query);
+  console.log(query);
 
   axios
     .get(query)
     .then(function(response) {
-      let venueName = response.data[0].venue.name;
-      let venueLocation = response.data[0].venue.city;
+      let { name, city, country } = response.data[0].venue;
       let datetime = response.data[0].datetime;
       let showDate = moment(datetime).format("L");
 
-      let concertMessage = `${venueName}\n${venueLocation}\n${showDate}`;
+      let concertMessage = `${name}\n${city}, ${country}\n${showDate}`;
       console.log(concertMessage);
       logResults(concertMessage);
     })
@@ -105,7 +102,7 @@ function showMovieInfo(movieInfo) {
   let query = `http://www.omdbapi.com/?t=${movieInfo}&apikey=${omdbapiKey}`;
 
   axios.get(query).then(function(response) {
-    console.log(query);
+    // console.log(query);
     const {
       Title,
       Year,
@@ -121,7 +118,12 @@ function showMovieInfo(movieInfo) {
       rating => rating.Source === "Rotten Tomatoes"
     )[0].Value;
     // console.log(rottenTomatoRating);
-    let movieMessage = `${Title}\n${Year}\n${Country}, ${Language}\n${Plot}\n${Actors}\nIMDB Rating: ${imdbRating}\nRotten Tomatoes: ${rottenTomatoRating}`;
+    let movieMessage = `${Title}
+${Country}, ${Language}, ${Year}
+${Plot}
+Starring: ${Actors}
+IMDB Rating: ${imdbRating}
+Rotten Tomatoes Rating: ${rottenTomatoRating}`;
     console.log(movieMessage);
     logResults(movieMessage);
 
@@ -135,8 +137,8 @@ function showWhatInfo() {
       return console.log(err);
     }
     let dataArr = data.split(",");
-    dataArr.unshift("node", "liri");
-    console.log(dataArr);
+    dataArr.unshift("node", "liri.js");
+    // console.log(dataArr);
     runswitch(dataArr);
   });
 }
