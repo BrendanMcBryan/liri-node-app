@@ -7,31 +7,45 @@ const keys = require("./keys.js");
 
 const spotify = new Spotify(keys.spotify);
 
-// this const below was with a lot of help from Min
-let swtichcase = process.argv[2];
-const [node, js, c, ...arr] = process.argv;
-let userInput = arr.join(" ");
-let userInputPlus = arr.join("+");
+function runswitch(command) {
+  // this const below was with a lot of help from Min
+  let swtichcase = command[2];
+  const [node, js, c, ...arr] = command;
+  let userInput = arr.join(" ");
+  let userInputPlus = arr.join("+");
+  if (userInputPlus === "") {
+    let blankArr = "No Search Entered";
+    logSearh(swtichcase, blankArr);
+  } else {
+    logSearh(swtichcase, arr);
+  }
+  // Figure out what to do based on argv 2
+  switch (swtichcase) {
+    case "concert-this":
+      showConcertInfo(userInput);
+      break;
+    case "spotify-this-song":
+      showSong(userInput);
+      break;
+    case "movie-this":
+      if (userInputPlus === "") {
+        let blankMovie = "Mr.+Nobody";
+        showMovieInfo(blankMovie);
+        break;
+      } else {
+        showMovieInfo(userInputPlus);
+        break;
+      }
 
-// Figure out what to do based on argv 2
-switch (swtichcase) {
-  case "concert-this":
-    showConcertInfo(userInput);
-    break;
-  case "spotify-this-song":
-    showSong(userInput);
-    break;
-  case "movie-this":
-    showMovieInfo(userInputPlus);
-    break;
-  case "do-what-it-says":
-    showWhatInfo();
-    break;
+    case "do-what-it-says":
+      showWhatInfo();
+      break;
+  }
 }
 
 function showConcertInfo(concertInfo) {
   let query = `https://rest.bandsintown.com/artists/${concertInfo}/events?app_id=codingbootcamp`;
-  console.log(query);
+  // console.log(query);
 
   axios
     .get(query)
@@ -41,8 +55,9 @@ function showConcertInfo(concertInfo) {
       let datetime = response.data[0].datetime;
       let showDate = moment(datetime).format("L");
 
-      let concertMessage = `${venueName}\n${venueLocation}\n${showDate}\n`;
+      let concertMessage = `${venueName}\n${venueLocation}\n${showDate}`;
       console.log(concertMessage);
+      logResults(concertMessage);
     })
     .catch(function(error) {
       if (error.response) {
@@ -91,33 +106,61 @@ function showMovieInfo(movieInfo) {
 
   axios.get(query).then(function(response) {
     console.log(query);
-    const { Title, Year, imdbRating, Country, Language, Plot, Actors, imdbID } = response.data;
-    const rottenTomatoRating = response.data.Ratings[1].Value;
-    //       * Rotten Tomacd toes Rating of the movie.
-    //       * Country where the movie was produced.
-    //       * Language of the movie.
-    //       * Plot of the movie.
-    //       * Actors in the movie.
-
-    let movieMessage = `${Title}\n${Year}\n${Country},${Language}\n${Plot}\n${Actors}\nRptten Tomatoes: ${rottenTomatoRating}`;
+    const {
+      Title,
+      Year,
+      imdbRating,
+      Country,
+      Language,
+      Plot,
+      Ratings,
+      Actors,
+      imdbID
+    } = response.data;
+    const rottenTomatoRating = Ratings.filter(
+      rating => rating.Source === "Rotten Tomatoes"
+    )[0].Value;
+    // console.log(rottenTomatoRating);
+    let movieMessage = `${Title}\n${Year}\n${Country}, ${Language}\n${Plot}\n${Actors}\nIMDB Rating: ${imdbRating}\nRotten Tomatoes: ${rottenTomatoRating}`;
     console.log(movieMessage);
+    logResults(movieMessage);
+
     //   console.log("The movie's rating is: " + response.data.imdbRating);
   });
 }
 
-function showWhatInfo() {}
-
-function logResults(logInfo) {
-  fs.writeFile("log.txt", userInput, function(err) {
-    if (err) {
+function showWhatInfo() {
+  fs.readFile("random.txt", "utf8", function(error, data) {
+    if (error) {
       return console.log(err);
     }
-    console.log("Success!");
-  });
-  fs.writeFile("log.txt", logInfo, function(err) {
-    if (err) {
-      return console.log(err);
-    }
-    console.log("Success!");
+    let dataArr = data.split(",");
+    dataArr.unshift("node", "liri");
+    console.log(dataArr);
+    runswitch(dataArr);
   });
 }
+
+function logSearh(command, search) {
+  let rightnow = moment().format("LLL");
+  let searchText = `\n## ${rightnow}\n### ${command}, ${search}`;
+
+  fs.appendFile("log.txt", searchText, function(err) {
+    if (err) {
+      return console.log(err);
+    }
+    // console.log("Success!");
+  });
+}
+
+function logResults(commandResult) {
+  let logData = `\n${commandResult}\n`;
+  fs.appendFile("log.txt", logData, function(err) {
+    if (err) {
+      return console.log(err);
+    }
+    // console.log("Success!");
+  });
+}
+
+runswitch(process.argv);
