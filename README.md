@@ -30,14 +30,15 @@ User can enter 4 commands.
 
 ## outputs
 
-concert-this[image]
+[concert-this](assets/images/concert-this-SS.png)
 
-spotify-this-song[image]
+[spotify-this-song](assets/images/spotify-this-song-SS.png)
 
-movie-this[image][image]
+[movie-this](assets/images/movie-this-SS.png)
+[movie-this Blank](assets/images/movie-this-Blank-SS.png)
 
-do-what-it-says[image]
-◊
+[do-what-it-says](assets/images/do-what-it-says-SS.png)
+
 ## further expansion
 
-I think this program can be expanded in in functionality. With more time, i would start looking for error catching techniques along with expanding on teh randomness of the "do-what-it-says" function. Specifically accessing the random text file in a more elaborate fasion such as providing a random line or even converting to a JSON object itself.
+I think this program can be expanded in in functionality. With more time, I would start looking for error catching techniques along with expanding on teh randomness of the "do-what-it-says" function. Specifically accessing the random text file in a more elaborate fasion such as providing a random line or even converting to a JSON object itself.
