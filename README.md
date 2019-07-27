@@ -30,14 +30,20 @@ User can enter 4 commands.
 
 ## outputs
 
-[concert-this](assets/images/concert-this-SS.png)
+#### concert-this
+![concert-this](assets/images/concert-this-SS.png)
 
-[spotify-this-song](assets/images/spotify-this-song-SS.png)
+#### spotify-this-song
+![spotify-this-song](assets/images/spotify-this-song-SS.png)
 
-[movie-this](assets/images/movie-this-SS.png)
-[movie-this Blank](assets/images/movie-this-Blank-SS.png)
+#### movie-this
+![movie-this](assets/images/movie-this-SS.png)
 
-[do-what-it-says](assets/images/do-what-it-says-SS.png)
+#### movie-this no input
+![movie-this Blank](assets/images/movie-this-Blank-SS.png)
+
+#### do-what-it-says
+![do-what-it-says](assets/images/do-what-it-says-SS.png)
 
 ## further expansion
 
