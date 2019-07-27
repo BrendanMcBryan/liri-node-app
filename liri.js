@@ -35,7 +35,7 @@ function runswitch(command) {
         showMovieInfo(userInputPlus);
         break;
       }
-    case "do-what-it-sagitys":
+    case "do-what-it-says":
       showWhatInfo();
       break;
   }
@@ -43,7 +43,7 @@ function runswitch(command) {
 
 function showConcertInfo(concertInfo) {
   let query = `https://rest.bandsintown.com/artists/${concertInfo}/events?app_id=codingbootcamp`;
-  console.log(query);
+  // console.log(query);
 
   axios
     .get(query)
@@ -89,7 +89,7 @@ function showSong(songInfo) {
     let songPreviewURL = data.tracks.items[0].external_urls.spotify;
     let albumName = data.tracks.items[0].album.name;
 
-    let songMessage = `${songName}\n${albumName}\n${songArtist}\nClick Below for a Preview\n${songPreviewURL}`;
+    let songMessage = `${songName}\nAlbum: ${albumName}\nArtists: ${songArtist}\nPreview: ${songPreviewURL}`;
 
     // let things = JSON.stringify(data);
     console.log(songMessage);
